@@ -1,27 +1,27 @@
 {
   "LOGIN": {
-    "TITLE": "Login to Chatwoot",
+    "TITLE": "登入雙龍體育後台",
     "EMAIL": {
-      "LABEL": "Email",
+      "LABEL": "電子郵件",
       "PLACEHOLDER": "example@companyname.com",
-      "ERROR": "Please enter a valid email address"
+      "ERROR": "請輸入有效的電子郵件地址"
     },
     "PASSWORD": {
-      "LABEL": "Password",
-      "PLACEHOLDER": "Password"
+      "LABEL": "密碼",
+      "PLACEHOLDER": "密碼"
     },
     "API": {
-      "SUCCESS_MESSAGE": "Login successful",
-      "ERROR_MESSAGE": "Could not connect to Woot server. Please try again.",
-      "UNAUTH": "Username or password is incorrect. Please try again."
+      "SUCCESS_MESSAGE": "登入成功",
+      "ERROR_MESSAGE": "無法連接到 雙龍體育 伺服器。請再試一次。",
+      "UNAUTH": "用戶名或密碼不正確。請再試一次。"
     },
     "OAUTH": {
-      "GOOGLE_LOGIN": "Login with Google",
-      "BUSINESS_ACCOUNTS_ONLY": "Please use your company email address to login",
-      "NO_ACCOUNT_FOUND": "We couldn't find an account for your email address."
+      "GOOGLE_LOGIN": "使用 Google 登入",
+      "BUSINESS_ACCOUNTS_ONLY": "請使用您的公司電子郵件地址登入",
+      "NO_ACCOUNT_FOUND": "我們找不到與您的電子郵件地址對應的帳戶。"
     },
-    "FORGOT_PASSWORD": "Forgot your password?",
-    "CREATE_NEW_ACCOUNT": "Create a new account",
-    "SUBMIT": "Login"
+    "FORGOT_PASSWORD": "忘記密碼？",
+    "CREATE_NEW_ACCOUNT": "創建新帳戶",
+    "SUBMIT": "登入"
   }
 }
