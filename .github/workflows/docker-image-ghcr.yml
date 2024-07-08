@@ -33,26 +33,26 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha
+            type=sha,prefix=sha-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           build-args: |
-            "APP_ENV=production"
-            "NODE_ENV=production"
-            "RUBY_VERSION=3.2.0"
-            "PG_MAJOR=11"
-            "NODE_MAJOR=16"
-            "YARN_VERSION=1.13.0"
-            "BUNDLER_VERSION=2.3.26"
+            APP_ENV=production
+            NODE_ENV=production
+            RUBY_VERSION=3.2.0
+            PG_MAJOR=11
+            NODE_MAJOR=16
+            YARN_VERSION=1.13.0
+            BUNDLER_VERSION=2.3.26
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
