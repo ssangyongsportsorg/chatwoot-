@@ -13,7 +13,7 @@
 
       <!-- 新增狀態區塊 -->
       <div class="mt-4 p-4 rounded-md bg-white dark:bg-slate-700 shadow-sm">
-        <button @click="openStatusPage" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">
+        <button @click="showStatusPage" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">
           <p v-if="status">{{ statusText }}</p>
           <p v-else>加載中...</p>
         </button>
@@ -38,6 +38,14 @@
         <article-card-skeleton-loader />
       </div>
     </div>
+
+    <!-- 新增的 iframe 狀態網頁 -->
+    <div v-if="showIframe" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full relative">
+        <iframe-loader :url="statusPageUrl" />
+        <button @click="closeIframe" class="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2">X</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -45,6 +53,7 @@
 import TeamAvailability from 'widget/components/TeamAvailability.vue';
 import ArticleHero from 'widget/components/ArticleHero.vue';
 import ArticleCardSkeletonLoader from 'widget/components/ArticleCardSkeletonLoader.vue';
+import IframeLoader from 'shared/components/IframeLoader.vue';
 
 import { mapGetters } from 'vuex';
 import darkModeMixin from 'widget/mixins/darkModeMixin';
@@ -57,6 +66,7 @@ export default {
     ArticleHero,
     TeamAvailability,
     ArticleCardSkeletonLoader,
+    IframeLoader,
   },
   mixins: [configMixin, routerMixin, darkModeMixin],
   props: {
@@ -72,6 +82,7 @@ export default {
   data() {
     return {
       status: null,
+      showIframe: false,
       statusPageUrl: 'https://status.ssangyongsports.eu.org/', // 替換為您的狀態頁 URL
     };
   },
@@ -161,8 +172,13 @@ export default {
           console.error('Error fetching status:', error);
         });
     },
-    openStatusPage() {
-      window.open(this.statusPageUrl, '_blank');
+    showStatusPage() {
+      const { portal: { slug } } = window.chatwootWebChannel;
+      const statusPageLink = `/status/${slug}`;
+      this.openArticleInArticleViewer(statusPageLink);
+    },
+    closeIframe() {
+      this.showIframe = false;
     },
   },
 };
