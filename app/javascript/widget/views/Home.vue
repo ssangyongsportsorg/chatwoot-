@@ -10,6 +10,14 @@
         :unread-count="unreadMessageCount"
         @start-conversation="startConversation"
       />
+
+      <!-- 新增狀態區塊 -->
+      <div class="mt-4 p-4 rounded-md bg-white dark:bg-slate-700 shadow-sm">
+        <h2 class="text-lg font-bold">目前服務狀態</h2>
+        <p v-if="status">{{ status.page.name }}: {{ status.page.status }}</p>
+        <p v-else>加載中...</p>
+        <button @click="showStatusPage" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">查看詳情</button>
+      </div>
     </div>
     <div v-if="showArticles" class="px-4 py-2 w-full">
       <div class="p-4 rounded-md bg-white dark:bg-slate-700 shadow-sm w-full">
@@ -28,6 +36,14 @@
     <div v-if="articleUiFlags.isFetching" class="px-4 py-2 w-full">
       <div class="p-4 rounded-md bg-white dark:bg-slate-700 shadow-sm w-full">
         <article-card-skeleton-loader />
+      </div>
+    </div>
+
+    <!-- 新增的 iframe 狀態網頁 -->
+    <div v-if="showIframe" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full">
+        <iframe :src="statusPageUrl" class="w-full h-96"></iframe>
+        <button @click="closeIframe" class="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2">X</button>
       </div>
     </div>
   </div>
@@ -60,6 +76,13 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return {
+      status: null,
+      showIframe: false,
+      statusPageUrl: 'https://status.ssangyongsports.eu.org/', // 替換為您的狀態頁 URL
+    };
   },
   computed: {
     ...mapGetters({
@@ -105,6 +128,9 @@ export default {
         locale,
       });
     }
+
+    // 獲取狀態
+    this.fetchStatus();
   },
   methods: {
     startConversation() {
@@ -130,6 +156,22 @@ export default {
         portal: { slug },
       } = window.chatwootWebChannel;
       this.openArticleInArticleViewer(`/hc/${slug}/${locale}`);
+    },
+    fetchStatus() {
+      fetch('https://status.ssangyongsports.eu.org/summary.json') // 替換為您的狀態頁 API 地址
+        .then(response => response.json())
+        .then(data => {
+          this.status = data;
+        })
+        .catch(error => {
+          console.error('Error fetching status:', error);
+        });
+    },
+    showStatusPage() {
+      this.showIframe = true;
+    },
+    closeIframe() {
+      this.showIframe = false;
     },
   },
 };
