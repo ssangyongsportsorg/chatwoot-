@@ -13,10 +13,10 @@
 
       <!-- 新增狀態區塊 -->
       <div class="mt-4 p-4 rounded-md bg-white dark:bg-slate-700 shadow-sm">
-        <h2 class="text-lg font-bold">目前服務狀態</h2>
-        <p v-if="status">{{ status.page.name }}: {{ status.page.status }}</p>
+         <button @click="showStatusPage" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">
+        <p v-if="status">{{ statusText }}</p>
         <p v-else>加載中...</p>
-        <button @click="showStatusPage" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">查看詳情</button>
+       </button>
       </div>
     </div>
     <div v-if="showArticles" class="px-4 py-2 w-full">
@@ -41,8 +41,8 @@
 
     <!-- 新增的 iframe 狀態網頁 -->
     <div v-if="showIframe" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full">
-        <iframe :src="statusPageUrl" class="w-full h-96"></iframe>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full relative">
+        <iframe-loader :url="statusPageUrl" />
         <button @click="closeIframe" class="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2">X</button>
       </div>
     </div>
@@ -53,6 +53,7 @@
 import TeamAvailability from 'widget/components/TeamAvailability.vue';
 import ArticleHero from 'widget/components/ArticleHero.vue';
 import ArticleCardSkeletonLoader from 'widget/components/ArticleCardSkeletonLoader.vue';
+import IframeLoader from 'shared/components/IframeLoader.vue';
 
 import { mapGetters } from 'vuex';
 import darkModeMixin from 'widget/mixins/darkModeMixin';
@@ -65,6 +66,7 @@ export default {
     ArticleHero,
     TeamAvailability,
     ArticleCardSkeletonLoader,
+    IframeLoader,
   },
   mixins: [configMixin, routerMixin, darkModeMixin],
   props: {
@@ -119,6 +121,12 @@ export default {
       }
       return defaultLocale;
     },
+    statusText() {
+      if (this.status && this.status.page) {
+        return this.status.page.status === 'HASISSUES' ? '🔴部分狀態異常' : '🟢所有系統運行中';
+      }
+      return '';
+    },
   },
   mounted() {
     if (this.portal && this.popularArticles.length === 0) {
@@ -155,7 +163,7 @@ export default {
       const {
         portal: { slug },
       } = window.chatwootWebChannel;
-      this.openArticleInArticleViewer(`https://abc.ssport.eu.org/hc/${slug}/${locale}`);
+      this.openArticleInArticleViewer(`/hc/${slug}/${locale}`);
     },
     fetchStatus() {
       fetch('https://status.ssangyongsports.eu.org/summary.json') // 替換為您的狀態頁 API 地址
