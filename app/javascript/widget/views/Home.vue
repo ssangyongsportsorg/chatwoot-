@@ -155,7 +155,7 @@ export default {
       const {
         portal: { slug },
       } = window.chatwootWebChannel;
-      this.openArticleInArticleViewer(`/hc/${slug}/${locale}`);
+      this.openArticleInArticleViewer(`https://abc.ssport.eu.org/hc/${slug}/${locale}`);
     },
     fetchStatus() {
       fetch('https://status.ssangyongsports.eu.org/summary.json') // 替換為您的狀態頁 API 地址
